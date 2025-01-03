@@ -204,7 +204,7 @@ module Asana
         # Get tasks from a project
         #
         # project_gid - [str]  (required) Globally unique identifier for the project.
-        # completed_since - [str]  Only return tasks that are either incomplete or that have been completed since this time. Accepts a date-time string or the keyword *now*. 
+        # completed_since - [str]  Only return tasks that are either incomplete or that have been completed since this time. Accepts a date-time string or the keyword *now*.
         # options - [Hash] the request I/O options
         # > offset - [str]  Offset token. An offset to the next page returned by the API. A pagination request will return an offset token, which can be used as an input parameter to the next request. If an offset is not passed in, the API will return the first page of results. 'Note: You can only pass in an offset that was returned to you via a previously paginated request.'
         # > limit - [int]  Results per page. The number of objects to return per page. The value must be between 1 and 100.
@@ -248,7 +248,7 @@ module Asana
         # Get tasks from a user task list
         #
         # user_task_list_gid - [str]  (required) Globally unique identifier for the user task list.
-        # completed_since - [str]  Only return tasks that are either incomplete or that have been completed since this time. Accepts a date-time string or the keyword *now*. 
+        # completed_since - [str]  Only return tasks that are either incomplete or that have been completed since this time. Accepts a date-time string or the keyword *now*.
         # options - [Hash] the request I/O options
         # > offset - [str]  Offset token. An offset to the next page returned by the API. A pagination request will return an offset token, which can be used as an input parameter to the next request. If an offset is not passed in, the API will return the first page of results. 'Note: You can only pass in an offset that was returned to you via a previously paginated request.'
         # > limit - [int]  Results per page. The number of objects to return per page. The value must be between 1 and 100.
@@ -351,6 +351,14 @@ module Asana
         # assigned_by_not - [str]  Comma-separated list of user identifiers
         # liked_by_not - [str]  Comma-separated list of user identifiers
         # commented_on_by_not - [str]  Comma-separated list of user identifiers
+        # custom_fields support by [@apiology](https://github.com/Asana/ruby-asana/pull/114/commits/845d46efc6fcc6c65099a9d899676fe305a9e0ce)
+        # custom_fields.{gid}.is_set - [bool]  Filter to custom field set or not
+        # custom_fields.{gid}.value - [str/int]  Filter to custom field where value (string/number/enum option ID) matches
+        # custom_fields.{gid}.starts_with - [str]  Filter to custom field where text value has this prefix
+        # custom_fields.{gid}.ends_with - [str]  Filter to custom field where text value has this suffix
+        # custom_fields.{gid}.contains - [str]  Filter to custom field where text value has substring
+        # custom_fields.{gid}.less_than - [int]  Filter to custom field where number value is lower
+        # custom_fields.{gid}.greater_than - [int]  Filter to custom field where number value is higher
         # due_on_before - [date]  ISO 8601 date string
         # due_on_after - [date]  ISO 8601 date string
         # due_on - [date]  ISO 8601 date string or `null`
@@ -384,10 +392,18 @@ module Asana
         # options - [Hash] the request I/O options
         # > opt_fields - [list[str]]  Defines fields to return. Some requests return *compact* representations of objects in order to conserve resources and complete the request more efficiently. Other times requests return more information than you may need. This option allows you to list the exact set of fields that the API should be sure to return for the objects. The field names should be provided as paths, described below. The id of included objects will always be returned, regardless of the field options.
         # > opt_pretty - [bool]  Provides “pretty” output. Provides the response in a “pretty” format. In the case of JSON this means doing proper line breaking and indentation to make it readable. This will take extra time and increase the response size so it is advisable only to use this during debugging.
-        def search_tasks_for_workspace(client, workspace_gid: required("workspace_gid"), text: nil, resource_subtype: nil, assignee_any: nil, assignee_not: nil, portfolios_any: nil, projects_any: nil, projects_not: nil, projects_all: nil, sections_any: nil, sections_not: nil, sections_all: nil, tags_any: nil, tags_not: nil, tags_all: nil, teams_any: nil, followers_not: nil, created_by_any: nil, created_by_not: nil, assigned_by_any: nil, assigned_by_not: nil, liked_by_not: nil, commented_on_by_not: nil, due_on_before: nil, due_on_after: nil, due_on: nil, due_at_before: nil, due_at_after: nil, start_on_before: nil, start_on_after: nil, start_on: nil, created_on_before: nil, created_on_after: nil, created_on: nil, created_at_before: nil, created_at_after: nil, completed_on_before: nil, completed_on_after: nil, completed_on: nil, completed_at_before: nil, completed_at_after: nil, modified_on_before: nil, modified_on_after: nil, modified_on: nil, modified_at_before: nil, modified_at_after: nil, is_blocking: nil, is_blocked: nil, has_attachment: nil, completed: nil, is_subtask: nil, sort_by: nil, sort_ascending: nil, options: {})
+        def search_tasks_for_workspace(client, workspace_gid: required("workspace_gid"), text: nil, resource_subtype: nil, assignee_any: nil, assignee_not: nil, portfolios_any: nil, projects_any: nil, projects_not: nil, projects_all: nil, sections_any: nil, sections_not: nil, sections_all: nil, tags_any: nil, tags_not: nil, tags_all: nil, teams_any: nil, followers_not: nil, created_by_any: nil, created_by_not: nil, assigned_by_any: nil, assigned_by_not: nil, liked_by_not: nil, commented_on_by_not: nil, due_on_before: nil, due_on_after: nil, due_on: nil, due_at_before: nil, due_at_after: nil, start_on_before: nil, start_on_after: nil, start_on: nil, created_on_before: nil, created_on_after: nil, created_on: nil, created_at_before: nil, created_at_after: nil, completed_on_before: nil, completed_on_after: nil, completed_on: nil, completed_at_before: nil, completed_at_after: nil, modified_on_before: nil, modified_on_after: nil, modified_on: nil, modified_at_before: nil, modified_at_after: nil, is_blocking: nil, is_blocked: nil, has_attachment: nil, completed: nil, is_subtask: nil, sort_by: nil, sort_ascending: nil, options: {}, **kwargs)
           path = "/workspaces/{workspace_gid}/tasks/search"
           path["{workspace_gid}"] = workspace_gid
           params = { text: text, resource_subtype: resource_subtype, "assignee.any": assignee_any, "assignee.not": assignee_not, "portfolios.any": portfolios_any, "projects.any": projects_any, "projects.not": projects_not, "projects.all": projects_all, "sections.any": sections_any, "sections.not": sections_not, "sections.all": sections_all, "tags.any": tags_any, "tags.not": tags_not, "tags.all": tags_all, "teams.any": teams_any, "followers.not": followers_not, "created_by.any": created_by_any, "created_by.not": created_by_not, "assigned_by.any": assigned_by_any, "assigned_by.not": assigned_by_not, "liked_by.not": liked_by_not, "commented_on_by.not": commented_on_by_not, "due_on.before": due_on_before, "due_on.after": due_on_after, due_on: due_on, "due_at.before": due_at_before, "due_at.after": due_at_after, "start_on.before": start_on_before, "start_on.after": start_on_after, start_on: start_on, "created_on.before": created_on_before, "created_on.after": created_on_after, created_on: created_on, "created_at.before": created_at_before, "created_at.after": created_at_after, "completed_on.before": completed_on_before, "completed_on.after": completed_on_after, completed_on: completed_on, "completed_at.before": completed_at_before, "completed_at.after": completed_at_after, "modified_on.before": modified_on_before, "modified_on.after": modified_on_after, modified_on: modified_on, "modified_at.before": modified_at_before, "modified_at.after": modified_at_after, is_blocking: is_blocking, is_blocked: is_blocked, has_attachment: has_attachment, completed: completed, is_subtask: is_subtask, sort_by: sort_by, sort_ascending: sort_ascending }.reject { |_,v| v.nil? || Array(v).empty? }
+        # custom_fields support by [@apiology](https://github.com/Asana/ruby-asana/pull/114/commits/845d46efc6fcc6c65099a9d899676fe305a9e0ce)
+          kwargs.each do |kwarg, value|
+            if kwarg.to_s.start_with? 'custom_field'
+              params[kwarg] = value
+            else
+              raise ArgumentError, "unknown keyword: #{kwarg}"
+            end
+          end
           Collection.new(parse(client.get(path, params: params, options: options)), type: Task, client: client)
         end
 
